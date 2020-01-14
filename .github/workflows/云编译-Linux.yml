@@ -1,4 +1,4 @@
-name: Build OpenWrt
+name: 在 Linux 下编译 OpenWrt
 
 on: 
   release:
