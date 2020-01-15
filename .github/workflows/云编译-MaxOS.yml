@@ -21,7 +21,10 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@master
-      
+    - name: 测试
+      run: |
+        ls
+        echo ls
     - name: Initialization environment
       run: |
         brew install coreutils diffutils findutils gawk gnu-getopt gnu-tar grep wget quilt xz gnu-sed
