@@ -10,6 +10,7 @@ jobs:
     - name: 获取OpenWrt项目源码
       run: |
         cd /Volumes
+        diskutil list
         git clone https://github.com/openwrt/openwrt.git
     - name: 更新并安装 feeds
       run: |
