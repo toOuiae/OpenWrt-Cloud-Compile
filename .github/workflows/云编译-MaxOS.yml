@@ -21,11 +21,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@master
-    - name: 测试
-      run: |
-        ls
-        echo ls
-    - name: Initialization environment
+      
+    - name: 初始化环境
       run: |
         brew install coreutils diffutils findutils gawk gnu-getopt gnu-tar grep wget quilt xz gnu-sed
         echo "::add-path::/usr/local/opt/gnu-getopt/bin"
@@ -39,18 +36,18 @@ jobs:
       working-directory: /Volumes/OpenWrt
       env: 
         REPO_URL: https://github.com/openwrt/openwrt
-        REPO_BRANCH: openwrt-18.06
+        REPO_BRANCH: master
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /Volumes/OpenWrt/openwrt $GITHUB_WORKSPACE/openwrt
         sed -i "s/grep Apple.LLVM/grep -E 'Apple.(LLVM|clang)'/g" openwrt/include/prereq-build.mk
-    - name: Update feeds
+    - name: 更新 feeds
       run: cd openwrt && ./scripts/feeds update -a
 
-    - name: Install feeds
+    - name: 安装 feeds
       run: cd openwrt && ./scripts/feeds install -a
 
-    - name: Load custom configuration
+    - name: 加载自定义配置
       env:
         CONFIG_FILE: '.config'
         DIY_SH: 'diy.sh'
@@ -67,33 +64,33 @@ jobs:
 
     - name: 下载 package
       run: |
-        #cd openwrt && make download -j8
+        cd openwrt && make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
     - name: 多线程编译
       run: |
         cd openwrt
         echo -e "$(nproc) 线程编译"
-        #make -j$(nproc)
+        make -j$(nproc)
     - name: 单线程编译
       if: failure()
       run: |
         cd openwrt
         #make -j1 V=s
-   # - name: Upload bin directory
-    #  uses: actions/upload-artifact@master
-    #  if: always()
-    #  with:
-    #    name: OpenWrt_bin
-    #    path: openwrt/bin
+    - name: Upload bin directory
+      uses: actions/upload-artifact@master
+      if: always()
+      with:
+        name: OpenWrt_bin
+        path: openwrt/bin
 
     - name: Organize files
       if: always()
       run: |
         cd openwrt/bin/targets/*/*
-        ls
+        ls -al
         rm -rf packages
-        ls
+        ls -al
         echo "::set-env name=FIRMWARE::$(pwd)"
     - name: Upload firmware
       uses: actions/upload-artifact@master
