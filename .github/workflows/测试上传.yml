@@ -20,10 +20,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: 测试发布 ${{ github.sha }}
+        release_name: Release ${{ github.sha }}
         body: |
-          Changes in this Release
+          此版本中的更改
           - First Change
           - Second Change
         draft: false
