@@ -1,6 +1,7 @@
 name: 测试发布
 
-on: [push]
+on:
+  push
 
 jobs:
   build:
@@ -9,12 +10,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: 测试
-      run: |
-        echo ${{ github.ref }}
-        echo ${{ github.head_ref }}
-        echo ${{ github.base_ref }}
-
+      
     - name: Create a Release
       uses: actions/create-release@v1
       env:
