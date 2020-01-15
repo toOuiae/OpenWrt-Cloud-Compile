@@ -1,4 +1,4 @@
-name: In MacOS Build OpenWrt
+name: Build OpenWrt based on MacOS
 
 on: 
 #  public
