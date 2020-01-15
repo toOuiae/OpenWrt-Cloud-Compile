@@ -7,14 +7,22 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
+    - name: 初始化环境
+      run: |
+        hdiutil create -size 20g -type SPARSE -fs "Case-sensitive HFS+" -volname OpenWrt OpenWrt.sparseimage
+        hdiutil attach OpenWrt.sparseimage
+        cd /Volumes/OpenWrt
+        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        brew install tar find fileutils awk grep
     - name: 获取OpenWrt项目源码
       run: |
-        cd /Volumes
-        diskutil list
         git clone https://github.com/openwrt/openwrt.git
+        ls -al
+        cd openwrt
     - name: 更新并安装 feeds
       run: |
         cd openwrt
+        ls -al
         ./scripts/feeds update -a
         ./scripts/feeds install -a
     - name: 开始构建
