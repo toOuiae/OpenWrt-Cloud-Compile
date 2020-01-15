@@ -74,7 +74,7 @@ jobs:
       run: |
         cd openwrt
         echo -e "$(nproc) 线程编译"
-        make -j$(nproc) V=s
+        #make -j$(nproc)
     - name: Single-thread compile
       if: failure()
       run: |
@@ -91,7 +91,9 @@ jobs:
       if: always()
       run: |
         cd openwrt/bin/targets/*/*
+        ls
         rm -rf packages
+        ls
         echo "::set-env name=FIRMWARE::$(pwd)"
     - name: Upload firmware
       uses: actions/upload-artifact@master
