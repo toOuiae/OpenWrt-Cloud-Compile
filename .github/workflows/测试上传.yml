@@ -18,7 +18,7 @@ jobs:
     - name: Create a Release
       uses: actions/create-release@v1
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: Tag ${{ github.ref }}
         release_name: Release ${{ github.ref }}
@@ -27,6 +27,8 @@ jobs:
 
     - name: Upload a Release Asset
       uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_a_release.outputs.upload_url }}
         asset_path: ./diy.sh
