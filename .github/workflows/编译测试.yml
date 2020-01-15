@@ -1,0 +1,18 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: 获取OpenWrt项目源码
+      run: git clone https://github.com/openwrt/openwrt.git
+    - name: 更新并安装 feeds
+      run: |
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+    - name: 开始构建
+      run: |
+        make -j1 V=s
