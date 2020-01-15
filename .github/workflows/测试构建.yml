@@ -11,6 +11,8 @@ jobs:
       run: git clone https://github.com/openwrt/openwrt.git
     - name: 更新并安装 feeds
       run: |
+        ls -al
+        cd openwrt
         ./scripts/feeds update -a
         ./scripts/feeds install -a
     - name: 开始构建
