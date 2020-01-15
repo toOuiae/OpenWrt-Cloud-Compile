@@ -19,8 +19,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@master
+    - uses: actions/checkout@master
       
     - name: 初始化环境
       run: |
@@ -41,6 +40,7 @@ jobs:
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /Volumes/OpenWrt/openwrt $GITHUB_WORKSPACE/openwrt
         sed -i "s/grep Apple.LLVM/grep -E 'Apple.(LLVM|clang)'/g" openwrt/include/prereq-build.mk
+        
     - name: 更新 feeds
       run: cd openwrt && ./scripts/feeds update -a
 
@@ -59,8 +59,6 @@ jobs:
         cd openwrt
         ./$DIY_SH
         make defconfig
-#    - name: SSH connection to Actions
-#      uses: P3TERX/debugger-action@master
 
     - name: 下载 package
       run: |
@@ -77,24 +75,32 @@ jobs:
       run: |
         cd openwrt
         #make -j1 V=s
-    - name: Upload bin directory
-      uses: actions/upload-artifact@master
-      if: always()
+    
+    - name: 打包文件
+      run: zip os.zip ./bin/targets/*/*/*.*
+      
+    - name: 创建发布
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: OpenWrt_bin
-        path: openwrt/bin/targets/bcm53xx/generic/openwrt-bcm53xx-generic-phicomm-k3-squashfs.trx
-
-    - name: Organize files
-      if: always()
-      run: |
-        cd openwrt/bin/targets/*/*
-        ls -al
-        rm -rf packages
-        ls -al
-        echo "::set-env name=FIRMWARE::$(pwd)"
-    - name: Upload firmware
-      uses: actions/upload-artifact@master
-      if: always()
+        tag_name: ${{ github.sha }}
+        release_name: Release ${{ github.sha }}
+        body: |
+          此版本中的更改
+          - First Change
+          - Second Change
+        draft: false
+        prerelease: false
+   
+    - name: 上传发布资源
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: OpenWrt_firmware
-        path: ${{ env.FIRMWARE }}
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./os.zip
+        asset_name: 固件.zip
+        asset_content_type: application/zip
