@@ -77,7 +77,7 @@ jobs:
         #make -j1 V=s
     
     - name: 打包文件
-      run: zip os.zip ./bin/targets/*/*/*.*
+      run: zip os.zip ./Volumes/OpenWrt/openwrt/bin/targets/*/*/*.*
       
     - name: 创建发布
       id: create_release
