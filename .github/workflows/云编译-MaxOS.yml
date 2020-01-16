@@ -2,13 +2,13 @@ name: Build OpenWrt based on MacOS
 
 on: 
 #  public
-  release:
-   types: [published]
-  push:
-    branches: 
-      - master
-    paths:
-      - '.config'
+#  release:
+#   types: [published]
+  push
+#    branches: 
+#      - master
+#    paths:
+#      - '.config'
 #  schedule:
 #    - cron: 0 8 * * 5
 #  watch:
@@ -77,7 +77,10 @@ jobs:
         #make -j1 V=s
     
     - name: 打包文件
-      run: zip os.zip ./Volumes/OpenWrt/openwrt/bin/targets/*/*/*.*
+      run: |
+        ls
+        zip os.zip ./bin/targets/*/*/*.*
+      working-directory: /Volumes/OpenWrt/openwrt
       
     - name: 创建发布
       id: create_release
