@@ -12,7 +12,7 @@ jobs:
         hdiutil create -size 20g -type SPARSE -fs "Case-sensitive HFS+" -volname OpenWrt OpenWrt.sparseimage
         hdiutil attach OpenWrt.sparseimage
         cd /Volumes/OpenWrt
-        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        #/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         brew install tar find fileutils awk grep
     - name: 获取OpenWrt项目源码
       run: |
