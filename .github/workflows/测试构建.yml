@@ -6,25 +6,30 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
+    - name: 拉取项目文件
     - uses: actions/checkout@v1
     - name: 初始化环境
       run: |
+        echo 创建APFS HFS+宗卷
         hdiutil create -size 20g -type SPARSE -fs "Case-sensitive HFS+" -volname OpenWrt OpenWrt.sparseimage
         hdiutil attach OpenWrt.sparseimage
-        cd /Volumes/OpenWrt
-        brew install coreutils diffutils findutils gawk gnu-getopt gnu-tar grep wget quilt xz
-    - name: 获取OpenWrt项目源码
+        echo 安装构建所需依赖
+        #cd /Volumes/OpenWrt
+        #brew install coreutils diffutils findutils gawk gnu-getopt gnu-tar grep wget quilt xz
+    
+    - name: 初始化OPENWRT项目文件
       run: |
-        ls -al
+        echo 获取 OpenWrt 项目源码...
         git clone https://github.com/openwrt/openwrt.git
-        ls -al
         cd openwrt
-    - name: 更新并安装 feeds
-      run: |
-        cd openwrt
-        ls -al
+        echo 更新并安装 Feeds...
         ./scripts/feeds update -a
         ./scripts/feeds install -a
+        echo 初始化配置文件...
+        make defconfig
+        
+      working-directory: ./Volumes/OpenWrt
+
     - name: 开始构建
       run: |
         make -j1 V=s
