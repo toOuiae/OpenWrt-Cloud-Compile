@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-    - name: 拉取项目文件
+    #- name: 拉取项目文件
     - uses: actions/checkout@v1
     - name: 初始化环境
       run: |
