@@ -15,6 +15,7 @@ jobs:
         brew install coreutils diffutils findutils gawk gnu-getopt gnu-tar grep wget quilt xz
     - name: 获取OpenWrt项目源码
       run: |
+        ls -al
         git clone https://github.com/openwrt/openwrt.git
         ls -al
         cd openwrt
