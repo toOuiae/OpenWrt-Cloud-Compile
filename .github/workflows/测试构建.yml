@@ -12,8 +12,7 @@ jobs:
         hdiutil create -size 20g -type SPARSE -fs "Case-sensitive HFS+" -volname OpenWrt OpenWrt.sparseimage
         hdiutil attach OpenWrt.sparseimage
         cd /Volumes/OpenWrt
-        #/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-        brew install gnu-tar findutils gawk grep
+        brew install coreutils diffutils findutils gawk gnu-getopt gnu-tar grep wget quilt xz
     - name: 获取OpenWrt项目源码
       run: |
         git clone https://github.com/openwrt/openwrt.git
