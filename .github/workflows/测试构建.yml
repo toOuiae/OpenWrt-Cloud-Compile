@@ -18,6 +18,7 @@ jobs:
         #cd /Volumes/OpenWrt
         #brew install coreutils diffutils findutils gawk gnu-getopt gnu-tar grep wget quilt xz
         brew install gnu-tar findutils coreutils gawk grep gnu-getopt
+        echo "::add-path::/usr/local/opt/gnu-getopt/bin"
     
     - name: 初始化OPENWRT项目文件
       run: |
