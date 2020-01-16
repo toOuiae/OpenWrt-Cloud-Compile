@@ -17,7 +17,7 @@ jobs:
         echo 安装构建所需依赖
         #cd /Volumes/OpenWrt
         #brew install coreutils diffutils findutils gawk gnu-getopt gnu-tar grep wget quilt xz
-        brew install gnu-tar findutils diffutils gawk grep
+        brew install gnu-tar findutils coreutils gawk grep
     
     - name: 初始化OPENWRT项目文件
       run: |
