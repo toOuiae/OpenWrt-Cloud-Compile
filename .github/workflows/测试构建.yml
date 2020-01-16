@@ -13,7 +13,7 @@ jobs:
         hdiutil attach OpenWrt.sparseimage
         cd /Volumes/OpenWrt
         #/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-        brew install gnu-tar findutils fileutils gawk grep
+        brew install gnu-tar findutils gawk grep
     - name: 获取OpenWrt项目源码
       run: |
         git clone https://github.com/openwrt/openwrt.git
