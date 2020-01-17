@@ -52,10 +52,6 @@ jobs:
         echo -e "$(nproc) 线程下载"
         make download -j$(nproc)
       working-directory: /Volumes/OpenWrt/openwrt
-    - name: 开始构建
-      run: |
-        make -j1 V=s
-      working-directory: /Volumes/OpenWrt/openwrt
     - name: 开始多线程构建
       run: |
         echo -e "$(nproc) 线程编译"
