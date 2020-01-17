@@ -38,24 +38,12 @@ jobs:
         echo -e "$(nproc) 线程下载"
         make download -j$(nproc)
       working-directory: /Volumes/OpenWrt/openwrt
-    
-    - name: 开始多线程构建
-      run: |
-        echo -e "$(nproc) 线程编译"
-        make -j$(nproc)
-      working-directory: /Volumes/OpenWrt/openwrt
-      
-    - name: 单线程编译
-      if: failure()
-      run: |
-        make -j1 V=s
-      working-directory: /Volumes/OpenWrt/openwrt
-    
     - name: 打包文件
       run: |
         ls
-        zip os.zip ./bin/targets/*/*/*.*
-      working-directory: /Volumes/OpenWrt/openwrt
+        #zip os.zip ./bin/targets/*/*/*.*
+        zip os.zip ./openwrt
+      working-directory: /Volumes/OpenWrt
       
     - name: 创建发布
       id: create_release
@@ -76,3 +64,15 @@ jobs:
         asset_path: ./os.zip
         asset_name: 固件.zip
         asset_content_type: application/zip
+    
+    - name: 开始多线程构建
+      run: |
+        echo -e "$(nproc) 线程编译"
+        make -j$(nproc)
+      working-directory: /Volumes/OpenWrt/openwrt
+      
+    - name: 单线程编译
+      if: failure()
+      run: |
+        make -j1 V=s
+      working-directory: /Volumes/OpenWrt/openwrt
