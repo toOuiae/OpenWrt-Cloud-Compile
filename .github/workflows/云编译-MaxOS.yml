@@ -4,11 +4,11 @@ on:
 #  public
 #  release:
 #   types: [published]
-  push:
-    branches: 
-      - master
-    paths:
-      - '.config'
+  push
+  #  branches: 
+   #   - master
+    #paths:
+     # - '.config'
 #  schedule:
 #    - cron: 0 8 * * 5
 #  watch:
@@ -65,23 +65,14 @@ jobs:
         cd openwrt && make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-    - name: 多线程编译
-      run: |
-        cd openwrt
-        echo -e "$(nproc) 线程编译"
-        make -j$(nproc)
-    - name: 单线程编译
-      if: failure()
-      run: |
-        cd openwrt
-        #make -j1 V=s
-    
     - name: 打包文件
       run: |
         ls
-        zip os.zip ./bin/targets/*/*/*.*
-      working-directory: /Volumes/OpenWrt/openwrt
-      
+        #zip os.zip ./bin/targets/*/*/*.*
+        zip -r openwrt.zip ./openwrt
+        ls
+      working-directory: /Volumes/OpenWrt
+    
     - name: 创建发布
       id: create_release
       uses: actions/create-release@v1
@@ -98,6 +89,34 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./os.zip
-        asset_name: 固件.zip
+        asset_path: /Volumes/OpenWrt/openwrt.zip
+        asset_name: OpenWrt.zip
+        asset_content_type: application/zip
+    
+    - name: 多线程编译
+      run: |
+        cd openwrt
+        echo -e "$(nproc) 线程编译"
+        make -j$(nproc)
+    - name: 单线程编译
+      if: failure()
+      run: |
+        cd openwrt
+        #make -j1 V=s
+    
+    - name: 打包文件
+      run: |
+        ls
+        zip os.zip ./bin/targets/*/*/*.*
+        #zip -r openwrt.zip ./openwrt
+        ls
+      working-directory: /Volumes/OpenWrt/openwrt
+    - name: 上传发布资源
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: /Volumes/OpenWrt/os.zip
+        asset_name: os.zip
         asset_content_type: application/zip
