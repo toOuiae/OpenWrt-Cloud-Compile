@@ -9,20 +9,6 @@ jobs:
     - name: 拉取项目文件
       uses: actions/checkout@v1
       
-    - name: 创建发布
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}${{ github.sha }}
-        release_name: Release ${{ github.sha }}
-        body: |
-          此版本中的更改
-          - First Change
-          - Second Change
-        draft: false
-        prerelease: false
     - name: 初始化环境
       run: |
         echo 创建APFS HFS+宗卷
@@ -52,6 +38,7 @@ jobs:
         echo -e "$(nproc) 线程下载"
         make download -j$(nproc)
       working-directory: /Volumes/OpenWrt/openwrt
+    
     - name: 开始多线程构建
       run: |
         echo -e "$(nproc) 线程编译"
@@ -70,7 +57,15 @@ jobs:
         zip os.zip ./bin/targets/*/*/*.*
       working-directory: /Volumes/OpenWrt/openwrt
       
-   
+    - name: 创建发布
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.sha }}
+        release_name: Release ${{ github.sha }}
+    
     - name: 上传发布资源
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1.0.1
