@@ -24,6 +24,7 @@ jobs:
       run: |
         echo 获取 OpenWrt 项目源码...
         git clone https://github.com/openwrt/openwrt.git
+        sed -i "s/grep Apple.LLVM/grep -E 'Apple.(LLVM|clang)'/g" openwrt/include/prereq-build.mk
         cd openwrt
         echo 更新并安装 Feeds...
         ./scripts/feeds update -a
@@ -42,7 +43,7 @@ jobs:
       run: |
         ls
         #zip os.zip ./bin/targets/*/*/*.*
-        zip os.zip ./openwrt
+        zip -r openwrt.zip ./openwrt
         ls
       working-directory: /Volumes/OpenWrt
       
@@ -62,8 +63,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /Volumes/OpenWrt/os.zip
-        asset_name: 固件.zip
+        asset_path: /Volumes/OpenWrt/openwrt.zip
+        asset_name: OpenWrt.zip
         asset_content_type: application/zip
     - name: 开始多线程构建
       run: |
@@ -76,3 +77,19 @@ jobs:
       run: |
         make -j1 V=s
       working-directory: /Volumes/OpenWrt/openwrt
+    - name: 打包文件
+      run: |
+        ls
+        zip os.zip ./bin/targets/*/*/*.*
+        #zip -r openwrt.zip ./openwrt
+        ls
+      working-directory: /Volumes/OpenWrt/openwrt
+    - name: 上传发布资源
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: /Volumes/OpenWrt/os.zip
+        asset_name: os.zip
+        asset_content_type: application/zip
